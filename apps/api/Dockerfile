@@ -17,8 +17,8 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Build the app
-RUN npm run build
+# Build the app (Avoid Windows xcopy in Linux Alpine)
+RUN npx @nestjs/cli build && cp -r src/generated dist/src/generated || true
 
 # --- Production Image ---
 FROM node:20-alpine AS production
