@@ -1,398 +1,407 @@
 # TuMotoTus Sueños — Especificaciones Funcionales
 ### Documento de Presentación para Socios Capitalistas
-**Versión 1.0 · Septiembre 2026 · Confidencial**
+**Versión 2.0 · Septiembre 2026 · Confidencial**
 
 ---
 
 ## 1. RESUMEN EJECUTIVO
 
-**TuMotoTus Sueños** es una plataforma tecnológica colombiana de **Rent-to-Own (RTO)** de motocicletas, diseñada para democratizar el acceso a un activo productivo para conductores del sector informal (mototaxismo, delivery, mensajería).
+**TuMotoTus Sueños** no es una empresa de alquiler de motos.
 
-El modelo resuelve la brecha de inclusión financiera: el conductor que hoy paga un "alquiler" diario a un dueño — sin construir patrimonio — puede, con la misma capacidad de pago, convertirse en propietario de su moto al cabo de 6, 12 o 18 meses.
+Es un **ecosistema digital de movilidad productiva** para el trabajador informal colombiano. Entregamos simultáneamente dos cosas que el conductor necesita y que hoy nadie le da juntas:
 
-La plataforma digitaliza y automatiza toda la cadena: desde la simulación del plan financiero, la postulación y verificación del conductor (KYC), hasta la gestión del contrato, el seguimiento de pagos, la geolocalización del activo y un canal de comunicación en tiempo real.
+> 🏍️ **La moto** — financiada sin banco, sin cuota inicial, sin fiador.
+> 📦 **El trabajo** — pedidos de domicilio desde el primer día para pagar la cuota.
+
+El conductor no espera tener dinero para acceder a la moto. **Usa la moto para generar el dinero con el que la paga.** Al finalizar el plazo, es propietario de un activo productivo libre de deuda.
+
+La plataforma que hace posible todo esto es un conjunto de **5 aplicaciones interconectadas** que cubren cada momento del ciclo: desde que el conductor se postula, hasta el día en que la moto es legalmente suya.
 
 ---
 
-## 2. PROBLEMA QUE RESUELVE
+## 2. EL PROBLEMA QUE RESOLVEMOS
 
 > *"El 56% de los mototaxistas no propietarios señala que adquirir una moto propia es su principal meta de capitalización."*
 > — Banco de la República, Estudio Mototaxismo Sincelejo
 
-| Situación actual del conductor | Con TuMotoTus Sueños |
-|---|---|
-| Paga $11.000/día al dueño de la moto | Cada pago abona a su propio activo |
-| Al final del día: $0 patrimonio acumulado | Al finalizar el contrato: moto propia |
-| Sin historial crediticio = sin banco | Sin banco, sin cuota inicial, sin fiador |
-| Dependiente del dueño | Independiente y propietario |
+Hoy el conductor informal enfrenta una trampa:
+
+- **Sin moto propia** → trabaja para enriquecer al dueño (paga $11.000/día sin construir patrimonio)
+- **Sin historial crediticio** → el banco no le presta
+- **Sin ahorros suficientes** → no puede dar cuota inicial
+- **Sin trabajo formal** → tampoco puede demostrar ingresos a una financiera
+
+**Las plataformas actuales que existen en el mercado** (dosR Movilidad, Rappi, PedidosYa, financieras informales) resuelven UNO de estos problemas, nunca todos. Le dan la moto SIN los pedidos, o los pedidos SIN la moto.
+
+**TuMotoTus Sueños resuelve los cuatro al tiempo.**
 
 ---
 
-## 3. MODELO DE NEGOCIO
+## 3. NUESTRO ECOSISTEMA — LAS 5 PLATAFORMAS
 
-### 3.1 Propuesta de Valor
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ECOSISTEMA TuMotoTus Sueños                  │
+│                                                                  │
+│  [1] App Conductor  [2] App Cliente QR  [3] Panel Admin         │
+│  [4] Motor RTO      [5] Sistema GPS + Comunicaciones            │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-La cuota diaria del conductor tiene **dos componentes transparentes:**
+Todo conectado. Todo en tiempo real. Todo desde el celular.
 
-$$\text{Cuota Diaria} = \underbrace{\text{Abono Capital}}_{\text{Paga la moto}} + \underbrace{\text{Alquiler Diario}}_{\text{Ingresos TuMotoTus Sueños}}$$
+---
 
-El **capital** incluye: precio de la moto + matrícula + SOAT + seguro todo riesgo + GPS tracker + casco. Todo financiado sin cuota inicial.
+## 4. PLATAFORMA 1 — APP DEL CONDUCTOR (Portal Móvil)
 
-### 3.2 Planes Comerciales (Modelo v3)
+### ¿Qué es?
+La aplicación principal del conductor. Funciona desde el navegador del celular sin necesidad de descargar nada. Es su centro de operaciones: aquí recibe pedidos, ve cuánto lleva pagado, reporta sus cuotas y se comunica con el equipo.
 
-> Vehículo de referencia: **Bajaj Boxer CT 100** — la moto de trabajo más vendida de Colombia (42% del mercado mototaxista)
+### ¿Qué puede hacer el conductor desde esta app?
 
-| Plan | Capital financiado | Cuota diaria | Cuota mensual | Ganancia mensual/moto |
-|---|---|---|---|---|
-| **6 meses** | $7.970.000 | $69.278 | $2.078.340 | $695.000 |
-| **12 meses** | $7.970.000 | $44.139 | $1.324.170 | $605.000 |
-| **18 meses** ⭐ | $7.970.000 | $36.760 | $1.102.800 | $605.000 |
+**Para ganar dinero (Domicilios):**
+- Ver los pedidos disponibles en tiempo real en su zona
+- Aceptar un pedido con un toque
+- Ver la dirección de recogida y entrega
+- Chatear con el cliente durante el servicio
+- Marcar el pedido como entregado
+- Ver su historial de servicios completados y ganancias del día
 
-> ⭐ El plan de 18 meses es el **producto estrella**: cuota más accesible, menor rotación, moto en excelente estado (≈49% de vida útil consumida) al finalizar.
+**Para pagar su moto (Contrato RTO):**
+- Ver cuánto ha pagado y cuánto le falta
+- Ver la barra de progreso hacia la propiedad (ej: "llevas el 34% de tu moto")
+- Consultar el calendario de próximas cuotas
+- Reportar un pago con foto del comprobante (Nequi, Daviplata, efectivo)
+- Ver el certificado de pago de cada cuota
+- Calcular cuánto costaría liquidar anticipadamente
+- Ver los datos de su moto: placa, SOAT, seguro vigente, próximo mantenimiento
 
-### 3.3 Estructura de Costos Operativos (por moto)
+**Para comunicarse:**
+- Chat directo con el administrador (soporte y acuerdos)
+- Notificaciones: recordatorio de cuota, confirmación de pago, alerta de mora
+- Notificación cuando le asignan un pedido
 
-| Rubro | Responsable | Costo/mes |
+**En caso de emergencia:**
+- Botón de alerta en caso de accidente o robo
+- Datos de contacto de soporte 24/7
+
+---
+
+## 5. PLATAFORMA 2 — APP DE DOMICILIOS (Marketplace QR)
+
+### ¿Qué es?
+Una plataforma de pedidos de domicilio donde los **comercios aliados** generan un código QR único. El cliente escanea ese QR con la cámara del celular y hace su pedido en segundos, sin descargar ninguna aplicación. El pedido llega automáticamente al conductor disponible más cercano.
+
+### ¿Por qué es diferente a Rappi o PedidosYa?
+- **Sin comisiones abusivas al comercio** (ellos cobran 25%-30%)
+- **Sin app para el cliente** — solo escanear el QR
+- **El conductor ya tiene la moto** — no necesita buscar conductores externos
+- **Los ingresos del domicilio van directo al conductor** — no pasan por intermediarios
+
+### ¿Qué puede hacer el cliente final?
+- Escanear el QR del comercio
+- Elegir el tipo de servicio: 📦 Paquete · 🛒 Mercado · 📄 Documentos · 🍕 Comida
+- Ingresar descripción del pedido y dirección de entrega
+- Dejar instrucciones especiales al conductor
+- Ver en tiempo real el estado del pedido: **SOLICITADO → ACEPTADO → EN CAMINO → ENTREGADO**
+- Chatear con el conductor durante el servicio
+- Calificar el servicio al finalizar
+
+### ¿Qué puede hacer el comercio aliado?
+- Tener su QR personalizado (impreso o digital)
+- Ver el historial de pedidos solicitados desde su establecimiento
+- Ver el tiempo promedio de respuesta
+- Solicitar nuevos pedidos en cualquier momento
+
+### ¿Qué gana TuMotoTus Sueños?
+- **Comisión por pedido** (modelo configurable: fijo o porcentaje)
+- **Retención del conductor** — tiene trabajo dentro de nuestra plataforma
+- **Reducción del riesgo de mora** — conductor con ingresos activos paga mejor
+
+---
+
+## 6. PLATAFORMA 3 — PANEL ADMINISTRATIVO (Centro de Control)
+
+### ¿Qué es?
+El sistema de gestión interna para el equipo de TuMotoTus Sueños. Desde aquí se controla todo el negocio: motos, conductores, contratos, pagos y finanzas.
+
+### Gestión de Conductores
+- Ver todos los candidatos postulados con sus documentos KYC
+- Aprobar o rechazar postulaciones con un clic
+- Ver el perfil completo de cada conductor activo: datos, contrato, historial de pagos
+- Filtrar por estado: postulado · activo · en mora · completado · retirado
+- Ver el score de cumplimiento de cada conductor (pagos a tiempo vs. tardíos)
+- Enviar mensajes o alertas individuales o masivas
+
+### Gestión de Contratos
+- Crear un contrato vinculando conductor + moto + plan financiero
+- Ver el calendario de cuotas generado automáticamente
+- Registrar pagos recibidos con fecha, monto y medio de pago
+- Ver conductores con mora: días vencidos, monto adeudado
+- Liquidar anticipadamente un contrato con cálculo automático de descuento
+- Marcar contrato como completado y generar carta de propiedad
+
+### Gestión de Flota (Motos)
+- Inventario de todas las motos: placa, modelo, estado, conductor asignado
+- Ver documentos vigentes: SOAT, seguro, revisión técnico-mecánica
+- Alertas automáticas de vencimiento de documentos (30, 15 y 5 días antes)
+- Historial de mantenimientos de cada moto
+- Ficha de entrega con fotografías del estado inicial
+- Ver ubicación GPS de cada moto en tiempo real
+- Activar alerta o bloqueo remoto en caso de robo
+
+### Control del Marketplace
+- Ver todos los pedidos activos, completados y cancelados
+- Ver qué conductor atendió cada pedido
+- Ver el tiempo de respuesta promedio por zona
+- Gestionar comercios aliados: alta, edición, desactivación del QR
+- Ver ingresos generados por comisiones del día/semana/mes
+
+### Finanzas y Reportes
+- Dashboard financiero: ingresos del día, del mes, proyección del año
+- Desglose por fuente: ingresos RTO vs. ingresos Marketplace
+- Conductores en mora y monto total adeudado
+- P&L por moto: cuánto genera cada activo mensualmente
+- Exportación de reportes en Excel/PDF para contabilidad
+- Indicadores clave: tasa de completación de contratos, tasa de mora, rotación de motos
+
+---
+
+## 7. PLATAFORMA 4 — MOTOR RTO (Simulador y Contratos)
+
+### ¿Qué es?
+El cerebro financiero de la plataforma. Es público para cualquier candidato y privado para el administrador.
+
+### Simulador Público (para candidatos)
+- El candidato ingresa el valor de la moto que quiere
+- El sistema calcula automáticamente el capital total a financiar (moto + matrícula + SOAT + seguro + GPS + casco)
+- Muestra 3 opciones: 6, 12 y 18 meses con cuota diaria, semanal y mensual
+- Muestra el desglose: abono al capital vs. alquiler del día
+- Permite postularse al plan elegido directamente desde el simulador
+- El candidato llena sus datos personales y sube sus documentos KYC (cédula, licencia, recibo, selfie)
+
+### Motor de Contratos (interno)
+- Genera el contrato digital con todos los parámetros del plan elegido
+- Calcula automáticamente las fechas de cada cuota
+- Aplica mora automáticamente si hay retraso (tasa configurable por día)
+- Calcula el valor de liquidación anticipada en cualquier momento
+- Genera los comprobantes de pago de cada cuota
+- Emite la carta de transferencia de propiedad al completar el 100%
+
+---
+
+## 8. PLATAFORMA 5 — GPS + COMUNICACIONES EN TIEMPO REAL
+
+### ¿Qué es?
+El sistema de rastreo y comunicación que conecta a todos los actores en tiempo real y protege los activos de la empresa.
+
+### Rastreo GPS de la Flota
+- Ubicación en tiempo real de cada moto en el mapa
+- Historial de recorridos por fecha y conductor
+- Zonas prohibidas: alerta si la moto sale de un área definida (geo-cerca)
+- Detección de inactividad prolongada (moto parada más de X horas)
+- Botón de bloqueo remoto del motor en caso de robo o impago grave
+- Reporte de kilómetros recorridos por mes (para proyectar mantenimientos)
+
+### Comunicaciones en Tiempo Real
+- **Chat conductor ↔ administrador:** soporte, acuerdos de pago, notificaciones
+- **Chat cliente ↔ conductor:** durante los pedidos de domicilio
+- **Notificaciones automáticas del sistema:**
+  - "Tu cuota vence mañana" (recordatorio)
+  - "Tu pago de $X fue confirmado" (tranquilidad)
+  - "Llevas el 50% de tu moto pagada" (motivación)
+  - "Tienes un nuevo pedido disponible" (oportunidad)
+  - "Tu moto tiene el SOAT próximo a vencer" (alerta)
+- **WhatsApp Business API** (Fase 2): todos los mensajes anteriores también por WhatsApp
+
+---
+
+## 9. EL EFECTO VOLANTE (FLYWHEEL)
+
+Este es el diferenciador que convierte TuMotoTus Sueños en un negocio de alto valor para el inversionista:
+
+```
+     ┌─────────────────────────────────────┐
+     │                                     │
+     ▼                                     │
+Conductor sin moto                         │
+     │                                     │
+     ▼                                     │
+Se postula → KYC → Contrato RTO            │
+     │                                     │
+     ▼                                     │
+Recibe la moto + acceso al Marketplace     │
+     │                                     │
+     ▼                                     │
+Hace domicilios → Genera ingresos          │
+     │                                     │
+     ▼                                     │
+Paga cuotas RTO con esos ingresos          │
+     │                                     │
+     ▼                                     │
+Termina el contrato → Dueño de la moto ───┘
+     │
+     ▼
+Recomienda la plataforma a otro conductor
+(adquisición orgánica de clientes)
+```
+
+**Cada conductor activo genera ingresos por DOS vías simultáneas:**
+1. **Cuota RTO** → ingreso fijo mensual garantizado por contrato
+2. **Comisión por domicilio** → ingreso variable por cada pedido completado
+
+**El Marketplace reduce el riesgo de mora:** un conductor con pedidos activos tiene flujo de caja constante. Un conductor sin trabajo incumple. Nosotros controlamos ambos.
+
+---
+
+## 10. MODELO DE NEGOCIO — DOS FUENTES DE INGRESOS
+
+### Fuente 1: Alquiler RTO (Ingreso Fijo)
+
+| Plan | Alquiler/día | Ganancia mensual/moto |
 |---|---|---|
-| Mantenimiento, combustible, llantas | Conductor | ~$381.000 |
-| GPS plan SIM (rastreo del activo) | TuMotoTus Sueños | $20.000 |
-| Plataforma tecnológica (prorrateado) | TuMotoTus Sueños | $5.000 |
-| Provisión riesgo (impago/hurto) | TuMotoTus Sueños | $30.000 |
-| **Costo total nuestro por moto** | | **$55.000/mes** |
+| 6 meses | $25.000 | $695.000 |
+| 12 meses | $22.000 | $605.000 |
+| 18 meses ⭐ | $22.000 | $605.000 |
 
-### 3.4 Proyección de Rentabilidad por Escala
+### Fuente 2: Comisiones Marketplace (Ingreso Variable)
 
-| Motos en flota | Ganancia mensual | Ganancia anual |
+| Métrica | Estimado conservador |
+|---|---|
+| Pedidos/día por conductor activo | 5 – 8 pedidos |
+| Comisión por pedido | $1.500 – $3.000 |
+| Ingreso marketplace/conductor/mes | $225.000 – $720.000 |
+| **Ingreso total por moto (RTO + Marketplace)** | **$830.000 – $1.325.000/mes** |
+
+### Proyección de Flota (plan 18 meses + marketplace)
+
+| Motos | Ingresos RTO/mes | Ingresos Marketplace/mes | **Total/mes** |
+|---|---|---|---|
+| 10 | $6.050.000 | $4.725.000 | **$10.775.000** |
+| 25 | $15.125.000 | $11.812.500 | **$26.937.500** |
+| 50 | $30.250.000 | $23.625.000 | **$53.875.000** |
+
+---
+
+## 11. FLUJO COMPLETO — DE CANDIDATO A PROPIETARIO
+
+```
+[1] DESCUBRIMIENTO
+    └── Llega a la landing · Simula su plan · Ve cuánto pagaría por día
+
+[2] POSTULACIÓN (KYC)
+    └── Llena datos · Sube documentos · Acepta términos
+
+[3] VALIDACIÓN (Admin)
+    └── Equipo revisa documentos · Aprueba en 24h · Firma contrato digital
+
+[4] ENTREGA DE LA MOTO
+    └── Moto entregada con GPS instalado · Acceso activado al App del Conductor
+
+[5] OPERACIÓN DIARIA
+    └── Recibe pedidos de domicilio · Completa servicios · Genera ingresos
+    └── Paga su cuota RTO (diaria o semanal) · Ve su progreso en el app
+
+[6] SEGUIMIENTO
+    └── GPS activo · Chat de soporte · Alertas de cuota · Reporte de pagos
+
+[7] PROPIEDAD
+    └── Último pago completado · Carta de propiedad emitida · Moto 100% suya
+    └── Puede seguir usando el Marketplace como conductor independiente
+```
+
+---
+
+## 12. ESTADO ACTUAL DE DESARROLLO
+
+| Plataforma / Módulo | Estado | Canal |
 |---|---|---|
-| 5 motos | $3.025.000 | $36.300.000 |
-| 10 motos | $6.050.000 | $72.600.000 |
-| 25 motos | $15.125.000 | $181.500.000 |
-| 50 motos | $30.250.000 | $363.000.000 |
+| Landing Page pública | ✅ Producción | Web |
+| Simulador RTO v3 (6/12/18 meses) | ✅ Producción | Web |
+| Formulario de Postulación + KYC | ✅ Producción | Web |
+| Marketplace QR (pedidos de domicilio) | ✅ Beta | Web |
+| Tracking de pedidos en tiempo real | ✅ Beta | Web |
+| Chat en tiempo real | 🟡 Base funcional | Web |
+| App del Conductor (portal pagos) | 🟡 Vista básica | Web |
+| Panel Administrativo | 🟡 Dashboard base | Web |
+| Motor de Contratos y Cuotas | 🔴 En desarrollo | Backend |
+| Gestión de Flota y Documentos | 🔴 Schema definido | Backend |
+| Integración GPS hardware | 🔴 Fase 2 | IoT |
+| Notificaciones WhatsApp Business | 🔴 Fase 2 | API |
+| Pasarela de pagos (PSE/Nequi) | 🔴 Fase 2 | API |
+| App nativa Android | 🔴 Fase 3 | Mobile |
 
 ---
 
-## 4. ARQUITECTURA TECNOLÓGICA
+## 13. HOJA DE RUTA
 
-### 4.1 Visión General
+### Fase 1 — MVP (Actual ✅)
+Plataforma en producción · Simulador financiero · Postulación digital · Marketplace QR · Tracking de pedidos
 
-TuMotoTus Sueños es una plataforma **SaaS multi-módulo** construida sobre una arquitectura de microservicios desacoplados, lista para escalar en la nube.
+### Fase 2 — Operación Real (Q4 2026)
+App del conductor completa · Gestión de contratos y mora · GPS hardware integrado · Notificaciones WhatsApp · Pasarela de pagos · Primeras 10 motos en operación
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  CAPA DE PRESENTACIÓN                │
-│  PWA Next.js (Vercel) — Mobile-first · Colombia      │
-│  Conductores │ Clientes QR │ Panel Admin             │
-└──────────────────────┬──────────────────────────────┘
-                       │ HTTPS / WebSocket
-┌──────────────────────▼──────────────────────────────┐
-│                    CAPA DE API                       │
-│  NestJS (Render) — REST + WebSocket (Socket.IO)     │
-│  Autenticación JWT · CORS · Rate Limiting            │
-└──────────────────────┬──────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────┐
-│                  CAPA DE DATOS                       │
-│  PostgreSQL (Render) — 4 Schemas                    │
-│  plataforma │ flota │ marketplace │ finanzas         │
-└─────────────────────────────────────────────────────┘
-```
-
-### 4.2 Stack Tecnológico
-
-| Capa | Tecnología | Rol |
-|---|---|---|
-| Frontend | Next.js 15 + TailwindCSS | PWA mobile-first |
-| Backend | NestJS + TypeScript | API REST + WebSockets |
-| Base de datos | PostgreSQL + Prisma ORM | Persistencia multi-schema |
-| Autenticación | JWT (JSON Web Token) | Sesiones seguras |
-| Tiempo real | Socket.IO | Chat y notificaciones live |
-| Infraestructura | Vercel + Render | Producción en la nube |
-| Rastreo GPS | Hardware IoT + SIM API | Geolocalización de activos |
-| Documentos | Cloudinary / S3 | Almacenamiento KYC |
-
-### 4.3 Schemas de Base de Datos
-
-| Schema PostgreSQL | Contiene |
-|---|---|
-| `plataforma` | Usuarios, roles, autenticación, sesiones |
-| `flota` | Vehículos, documentos, GPS, historial técnico |
-| `contratos` | Contratos RTO, cuotas, pagos, mora |
-| `marketplace` | Comercios QR, pedidos de domicilio, tracking |
-| `finanzas` | Resumen financiero, ingresos, reportes |
-
----
-
-## 5. MÓDULOS FUNCIONALES
-
-### Módulo 1 — ONBOARDING Y KYC (Conoce a Tu Cliente)
-
-**Descripción:** Canal digital para que un candidato a conductor simule su plan, se postule y envíe sus documentos de verificación sin necesidad de visitar una oficina.
-
-**Funcionalidades:**
-- Simulador interactivo de cuotas (slider de valor de moto, selección de plazo)
-- Desglose transparente: abono a capital vs. alquiler diario
-- Formulario de postulación con validación en tiempo real
-- Carga de documentos KYC: cédula (frontal/reverso), licencia de conducción, recibo público, selfie
-- Consentimiento de tratamiento de datos (Ley 1581/2012)
-- Notificación automática al equipo admin
-- Estado de postulación en tiempo real para el candidato
-
-**Usuarios:** Candidato a conductor (público)
-
----
-
-### Módulo 2 — GESTIÓN DE CONTRATOS RTO
-
-**Descripción:** Motor financiero central de la plataforma. Administra el ciclo de vida completo de cada contrato desde la firma hasta la transferencia de propiedad.
-
-**Funcionalidades:**
-- Creación de contrato vinculado a conductor + vehículo + plan financiero
-- Calendario automático de cuotas (diario/semanal/mensual)
-- Registro de pagos con fecha, monto y medio de pago
-- Cálculo de mora automático (días vencidos × tasa configurada)
-- Dashboard de estado: al día / en mora / pagado / cancelado
-- Generación de comprobante de pago (PDF)
-- Alertas automáticas: 1 día antes del vencimiento, al entrar en mora
-- Historial completo de transacciones por conductor
-- Liquidación anticipada con cálculo de descuento
-- Transferencia de propiedad al completar el 100% del capital
-
-**Usuarios:** Administrador, Conductor
-
----
-
-### Módulo 3 — GESTIÓN DE FLOTA
-
-**Descripción:** Inventario digital de todos los activos (motos) de la empresa con trazabilidad completa desde la compra hasta la transferencia.
-
-**Funcionalidades:**
-- Registro de vehículos: placa, marca, modelo, cilindraje, VIN, color
-- Gestión documental por placa: SOAT, seguro, revisión técnico-mecánica
-- Alertas de vencimiento de documentos (30, 15 y 5 días antes)
-- Hoja de vida digital: historial de mantenimientos, reparaciones, km
-- Estado del vehículo: disponible / en contrato / en mantenimiento / recuperado
-- Ficha de entrega y recepción con fotografías
-- Integración GPS: ubicación en tiempo real, historial de recorridos
-- Botón de alerta/bloqueo remoto del vehículo (anti-hurto)
-
-**Usuarios:** Administrador
-
----
-
-### Módulo 4 — PORTAL DEL CONDUCTOR
-
-**Descripción:** Aplicación móvil progresiva (PWA) para que el conductor gestione su contrato, reporte pagos y se comunique con el equipo desde su celular.
-
-**Funcionalidades:**
-- Dashboard personal: cuotas pagadas, saldo pendiente, % de avance hacia la propiedad
-- Calendario de pagos con próximas fechas
-- Reporte de pago con comprobante fotográfico (Nequi, Daviplata, efectivo)
-- Chat directo con el administrador
-- Sección "Mi Moto": datos del vehículo, documentos vigentes
-- Notificaciones push: recordatorio de cuota, confirmación de pago
-- Calculadora de liquidación anticipada
-- Estado de postulación (para candidatos en proceso)
-
-**Usuarios:** Conductor activo
-
----
-
-### Módulo 5 — MARKETPLACE DE DOMICILIOS (QR)
-
-**Descripción:** Servicio paralelo de generación de pedidos de domicilio a través de códigos QR para comercios aliados. Fuente de ingresos adicionales para conductores activos.
-
-**Funcionalidades:**
-- Generación de QR único por comercio aliado
-- Formulario de pedido para el cliente final (sin app, desde el QR)
-- Selector de tipo de servicio: paquete, mercado, documentos, comida
-- Asignación automática al conductor disponible más cercano
-- Pantalla de tracking en tiempo real para el cliente: SOLICITADO → ACEPTADO → EN CAMINO → ENTREGADO
-- Chat cliente ↔ conductor durante el servicio
-- Historial de pedidos por comercio y por conductor
-- Calificación del servicio al finalizar
-- Reportes de ingresos por domicilios para el conductor
-
-**Usuarios:** Cliente final (escanea QR), Conductor activo, Administrador
-
----
-
-### Módulo 6 — PANEL ADMINISTRATIVO
-
-**Descripción:** Centro de control operativo para el equipo de TuMotoTus Sueños. Visibilidad total de contratos, conductores, flota y finanzas.
-
-**Funcionalidades:**
-- Dashboard financiero: ingresos del día/mes, mora total, proyección
-- Gestión de postulaciones: revisar, aprobar o rechazar candidatos
-- Creación y firma de contratos
-- Vista de conductores: filtrar por estado (activo, moroso, completado)
-- Alertas de mora: conductores con cuotas vencidas > N días
-- Mapa en tiempo real de toda la flota (GPS)
-- Reportes exportables: Excel/PDF de pagos, contratos, inventario
-- Gestión de usuarios y roles del equipo
-- Configuración de parámetros: plazos, alquileres, multas por mora
-
-**Usuarios:** Administrador, Gerencia
-
----
-
-### Módulo 7 — FINANZAS Y REPORTES
-
-**Descripción:** Motor de inteligencia financiera que consolida todos los ingresos y genera los indicadores clave del negocio.
-
-**Funcionalidades:**
-- P&L por moto: ingresos, costos nuestros, ganancia neta
-- Flujo de caja proyectado (próximos 30/90/180 días)
-- Indicadores clave: tasa de mora, tasa de completación, ROI por moto
-- Comparativo real vs. proyectado
-- Reporte de contratos en riesgo (mora > 7 días)
-- Exportación a Excel para contabilidad
-- Integración futura con SIIGO / Alegra (contabilidad colombiana)
-
-**Usuarios:** Gerencia, Administrador financiero
-
----
-
-### Módulo 8 — COMUNICACIONES EN TIEMPO REAL
-
-**Descripción:** Sistema de mensajería y notificaciones que conecta todos los actores de la plataforma sin necesidad de WhatsApp externo.
-
-**Funcionalidades:**
-- Chat conductor ↔ administrador (soporte)
-- Chat cliente ↔ conductor (pedidos de domicilio)
-- Notificaciones push web: cuotas, pagos confirmados, alertas
-- Integración WhatsApp Business API (fase 2): recordatorios automáticos de cuota
-- Historial de conversaciones por contrato/pedido
-- Mensajes de sistema automatizados: bienvenida, confirmación, mora
-
-**Usuarios:** Todos los roles
-
----
-
-## 6. FLUJO COMPLETO DEL USUARIO
-
-```
-CANDIDATO A CONDUCTOR
-        │
-        ▼
-[1] Simulador de Plan (elige moto y plazo)
-        │
-        ▼
-[2] Formulario de Postulación + KYC (documentos)
-        │
-        ▼
-[3] Revisión Admin (aprobación en 24h)
-        │
-        ▼
-[4] Firma Digital del Contrato RTO
-        │
-        ▼
-[5] Entrega de la Moto (+ GPS instalado)
-        │
-        ▼
-[6] Pagos Diarios/Semanales vía Portal del Conductor
-        │
-        ▼
-[7] Seguimiento GPS + Chat de Soporte
-        │
-        ▼
-[8] Último Pago → Transferencia de Propiedad ✅
-```
-
----
-
-## 7. SEGURIDAD Y CUMPLIMIENTO
-
-| Aspecto | Implementación |
-|---|---|
-| Autenticación | JWT con expiración configurable |
-| Datos personales | Ley 1581 de 2012 (Habeas Data) |
-| Transmisión | HTTPS / TLS en todos los endpoints |
-| Documentos KYC | Almacenamiento cifrado en nube |
-| GPS anti-hurto | Bloqueo remoto del vehículo |
-| Acceso admin | PIN + roles diferenciados |
-| Auditoría | Log de todas las acciones críticas |
-
----
-
-## 8. ESTADO ACTUAL DEL DESARROLLO
-
-| Módulo | Estado |
-|---|---|
-| Simulador de Cuotas (v3) | ✅ Producción |
-| Postulación y KYC (formulario) | ✅ Producción |
-| Marketplace QR + Tracking | ✅ Producción (beta) |
-| Chat en tiempo real | 🟡 Base funcional |
-| Portal del Conductor | 🟡 Vista básica |
-| Panel Admin | 🟡 Dashboard base |
-| Gestión de Contratos | 🔴 En desarrollo |
-| Gestión de Flota | 🔴 Schema definido |
-| GPS integrado | 🔴 Pendiente hardware |
-| Finanzas y Reportes | 🔴 Schema definido |
-| Notificaciones WhatsApp | 🔴 Fase 2 |
-
----
-
-## 9. HOJA DE RUTA (ROADMAP)
-
-### Fase 1 — MVP (Actual) ✅
-- Plataforma en producción (Vercel + Render + PostgreSQL)
-- Simulador financiero v3
-- Postulación digital con KYC
-- Marketplace de domicilios QR
-
-### Fase 2 — Operación (Q4 2026)
-- Portal completo del conductor con historial de pagos
-- Panel admin con gestión de contratos y mora
-- Integración GPS hardware (tracker IoT)
-- Notificaciones WhatsApp Business API
-- Primeras 10 motos en operación
-
-### Fase 3 — Escala (Q1-Q2 2027)
-- Módulo de finanzas con P&L automatizado
-- App nativa Android (para conductores)
-- Integración con pasarela de pagos (PSE, Nequi, Daviplata)
-- Expansión a 50+ motos / 2 ciudades
+### Fase 3 — Escala (Q1–Q2 2027)
+App Android nativa · Integración contable (SIIGO/Alegra) · Score crediticio interno · 50 motos · 2 ciudades · Alianzas con comercios para el Marketplace
 
 ### Fase 4 — Ecosistema (Q3 2027+)
-- Marketplace B2B para empresas de delivery
-- Score crediticio propio basado en historial de pagos
-- Alianza con aseguradoras para tarifas preferenciales
-- Posible expansión a Ecuador y Perú
+Score crediticio propio como producto (préstamos a conductores ya verificados) · Expansión B2B (flotas empresariales) · Ecuador y Perú
 
 ---
 
-## 10. REQUERIMIENTOS DE INVERSIÓN
+## 14. REQUERIMIENTO DE INVERSIÓN Y RETORNO
 
-| Rubro | Inversión estimada |
+| Rubro | Inversión |
 |---|---|
-| Flota inicial (10 motos Boxer CT 100) | $79.700.000 |
-| GPS hardware (10 unidades) | $3.000.000 |
-| Desarrollo tecnológico (Fases 2-3) | $25.000.000 |
-| Operación y nómina (6 meses) | $30.000.000 |
-| Marketing y adquisición conductores | $10.000.000 |
+| Flota inicial (10 motos Boxer CT 100 con docs) | $79.700.000 |
+| GPS hardware (10 unidades + instalación) | $3.000.000 |
+| Desarrollo tecnológico Fase 2 | $25.000.000 |
+| Operación y equipo (6 meses) | $30.000.000 |
+| Marketing y adquisición de conductores | $10.000.000 |
 | **TOTAL INVERSIÓN FASE 2** | **$147.700.000** |
 
-**Retorno proyectado (10 motos × 18 meses):**
+**Retorno proyectado con 10 motos (RTO + Marketplace):**
 
-$$\text{Ganancia bruta} = 10 \times \$660.000/\text{mes} \times 18 = \$118.800.000$$
-
-$$\text{ROI} = \frac{\$118.800.000}{\$147.700.000} \approx 80\% \text{ en 18 meses}$$
-
-> El punto de equilibrio se alcanza en el mes **9-10** de operación con 10 motos activas.
-
----
-
-## 11. DIFERENCIADORES COMPETITIVOS
-
-| Factor | Competencia tradicional | TuMotoTus Sueños |
+| Fuente | Ingreso mensual | Ingreso 18 meses |
 |---|---|---|
-| Canal | Presencial / papel | 100% digital desde el celular |
-| Transparencia | Contrato verbal o físico | Contrato digital con desglose en tiempo real |
-| Seguimiento | Sin control del activo | GPS en tiempo real + alerta anti-hurto |
-| Comunicación | WhatsApp informal | Chat integrado en plataforma |
-| Escalabilidad | Una ciudad, manual | Multi-ciudad, automatizado |
-| Score conductor | Sin historial | Historial de pagos propio (base para crédito futuro) |
+| RTO (alquiler diario) | $6.050.000 | $108.900.000 |
+| Marketplace (comisiones) | $4.725.000 | $85.050.000 |
+| **Total** | **$10.775.000** | **$193.950.000** |
+
+$$\text{ROI} = \frac{\$193.950.000}{\$147.700.000} \approx \mathbf{131\%} \text{ en 18 meses}$$
+
+> Punto de equilibrio estimado: **mes 7** con 10 motos activas en ambas plataformas.
 
 ---
 
-*Documento preparado por el equipo técnico de TuMotoTus Sueños · Confidencial · No distribuir sin autorización*
+## 15. DIFERENCIADORES FRENTE A LA COMPETENCIA
+
+| Factor | dosR / Financieras tradicionales | Rappi / PedidosYa | **TuMotoTus Sueños** |
+|---|---|---|---|
+| Financia la moto | ✅ | ❌ | ✅ |
+| Da trabajo al conductor | ❌ | ✅ | ✅ |
+| El conductor construye patrimonio | ❌ | ❌ | ✅ |
+| Sin app para el cliente | ❌ | ❌ | ✅ (solo QR) |
+| GPS + control del activo | ❌ | N/A | ✅ |
+| Chat integrado | ❌ | ✅ | ✅ |
+| Score crediticio propio | ❌ | ❌ | ✅ (Fase 3) |
+| Comisión al comercio | N/A | 25%–30% | Configurable (menor) |
+| Plataforma 100% digital | Parcial | ✅ | ✅ |
+
+---
+
+## 16. VENTAJA ESTRUCTURAL
+
+La ventaja más importante de TuMotoTus Sueños no es la tecnología. Es la **posición única en la cadena de valor**:
+
+1. Somos dueños del activo (la moto) hasta que el conductor termina de pagar → **garantía real**
+2. Somos el canal por el que el conductor genera los ingresos para pagar → **control del flujo de caja**
+3. Somos la plataforma de comunicación entre conductor y cliente → **datos valiosos del comportamiento**
+4. Somos los que verifican la identidad y el historial del conductor → **base de datos crediticia propia**
+
+Ningún actor del mercado hoy tiene estas cuatro posiciones al mismo tiempo.
+
+---
+
+*Documento preparado por el equipo técnico de TuMotoTus Sueños · v2.0 · Septiembre 2026*
+*Confidencial — No distribuir sin autorización expresa*
