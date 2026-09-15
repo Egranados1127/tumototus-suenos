@@ -1,78 +1,104 @@
 // ══════════════════════════════════════════════════════════════════
 // Módulo CONTRATOS — Use Case: Simular Cuota RTO
-// Calculadora pública — no requiere autenticación
-// El admin la usa ANTES de firmar el contrato para mostrar opciones
+// Modelo v3 — Plazos: 6, 12 y 18 meses
+// Capital = Valor moto + Costos iniciales (matrícula, SOAT, GPS, seguro, casco, kit)
+// Alquiler diario = cubre nuestros costos operativos + ganancia mínima $600k/mes/moto
 // ══════════════════════════════════════════════════════════════════
 
 import { Injectable } from '@nestjs/common';
 
+// Costos iniciales que el conductor financia junto con la moto
+const COSTOS_INICIALES = {
+  matricula:    800_000,  // matrícula + impuesto (ciudad promedio)
+  soat:         200_000,  // SOAT primer año (<125cc)
+  seguro:       500_000,  // Seguro todo riesgo año 1
+  gps:          300_000,  // Hardware GPS tracker
+  casco:        120_000,  // Casco básico (obligatorio)
+  kit:           50_000,  // Kit herramienta básica
+  TOTAL:      1_970_000,
+};
+
+// Alquiler diario por plazo (cubre GPS SIM $20k + plataforma $5k + provisión $30k + ganancia ≥$600k/mes)
+const ALQUILER_DIARIO: Record<number, number> = {
+  6:  25_000,  // Prima de riesgo alta (plazo corto, mayor rotación)
+  12: 22_000,  // Prima media
+  18: 22_000,  // Prima baja (mayor compromiso, menor rotación)
+};
+
+const PLAZOS_VALIDOS = [6, 12, 18];
+
 export interface SimulacionRTO {
   plazoMeses: number;
-  cuotaDiaria: number;        // Total a cobrar al conductor
+  capitalTotal: number;        // Valor moto + costos iniciales
+  costosIniciales: number;     // $1.970.000 fijos
+  cuotaDiaria: number;         // Total a cobrar al conductor
   cuotaSemanal: number;
   cuotaMensual: number;
   desglose: {
-    cuotaMotoDiaria: number;     // Abono a capital
-    cuotaAlquilerDiaria: number; // Cubre seguro, depreciación y ganancia
+    cuotaCapitalDiaria: number;   // Abono al activo (moto + docs)
+    cuotaAlquilerDiaria: number;  // Ganancia TuMotoTus Sueños
   };
-  precioTotal: number;
-  gananciaTotal: number;
-  porcentajeReal: number;
+  precioTotal: number;           // Total que paga el conductor
+  gananciaTotal: number;         // Nuestra ganancia bruta total
+  gananciaMensual: number;       // Nuestra ganancia mensual
+  recomendado: boolean;          // Plan estrella
 }
 
 export interface SimularCuotaCommand {
-  valorMoto: number;           // COP
-  plazosASimular?: number[];   // ej: [3, 6, 12]
+  valorMoto: number;            // Precio de la moto COP
+  plazosASimular?: number[];    // Por defecto [6, 12, 18]
 }
 
 @Injectable()
 export class SimularCuotaUseCase {
   ejecutar(cmd: SimularCuotaCommand): SimulacionRTO[] {
-    // Escenarios exactos solicitados por gerencia: 3, 6 y 12 meses
-    const plazos = cmd.plazosASimular ?? [3, 6, 12];
-    
-    const plazosValidos = plazos.filter(p => [3, 6, 12].includes(p));
+    const plazos = (cmd.plazosASimular ?? PLAZOS_VALIDOS)
+      .filter(p => PLAZOS_VALIDOS.includes(p));
 
-    return plazosValidos.map((plazoMeses) => {
-      // Alquiler dinámico que absorbe Seguros, Depreciación y Ganancia
-      // Ecuación lineal aproximada: 12 meses = 13.300 | 6 meses = 15.100 | 3 meses = 16.000
-      let alquilerDiario = 13300;
-      if (plazoMeses === 3) alquilerDiario = 16000;
-      if (plazoMeses === 6) alquilerDiario = 15100;
-      
-      const diasTotales = plazoMeses * 30;
-      
-      // Cuota Fija para el pago exclusivo de la moto (Capital)
-      const abonoCapitalDiario = Math.ceil(cmd.valorMoto / diasTotales);
-      
-      // Cuota Integral que paga el conductor
-      const cuotaDiaria = abonoCapitalDiario + alquilerDiario;
-      
-      const precioTotal = cuotaDiaria * diasTotales;
-      const gananciaTotal = alquilerDiario * diasTotales;
+    const capitalTotal = cmd.valorMoto + COSTOS_INICIALES.TOTAL;
+
+    return plazos.map((plazoMeses) => {
+      const alquilerDiario  = ALQUILER_DIARIO[plazoMeses];
+      const diasTotales     = plazoMeses * 30;
+
+      const cuotaCapitalDiaria  = Math.ceil(capitalTotal / diasTotales);
+      const cuotaDiaria         = cuotaCapitalDiaria + alquilerDiario;
+      const precioTotal         = cuotaDiaria * diasTotales;
+      const gananciaTotal       = alquilerDiario * diasTotales;
+      const gananciaMensual     = alquilerDiario * 30;
 
       return {
         plazoMeses,
+        capitalTotal,
+        costosIniciales:          COSTOS_INICIALES.TOTAL,
         cuotaDiaria,
-        cuotaSemanal: cuotaDiaria * 7,
-        cuotaMensual: cuotaDiaria * 30,
+        cuotaSemanal:             cuotaDiaria * 7,
+        cuotaMensual:             cuotaDiaria * 30,
         desglose: {
-          cuotaMotoDiaria: abonoCapitalDiario,
+          cuotaCapitalDiaria,
           cuotaAlquilerDiaria: alquilerDiario,
         },
         precioTotal,
         gananciaTotal,
-        porcentajeReal: Math.round((gananciaTotal / cmd.valorMoto) * 100),
+        gananciaMensual,
+        recomendado: plazoMeses === 18,  // Plan estrella
       };
     });
   }
 }
 
-/* Ejemplo de respuesta para una moto de $4.500.000 COP con 30% ganancia:
+/* ─── Ejemplo con Boxer CT 100 ($6.000.000) ──────────────────────
+   capitalTotal = $7.970.000
 
-  [
-    { plazoMeses: 12, cuotaDiaria: 16250, cuotaSemanal: 113750, cuotaMensual: 487500, precioTotal: 5850000, gananciaTotal: 1350000 },
-    { plazoMeses: 18, cuotaDiaria: 10834, cuotaSemanal: 75838, cuotaMensual: 325020, precioTotal: 5850000, gananciaTotal: 1350000 },
-    { plazoMeses: 24, cuotaDiaria: 8125, cuotaSemanal: 56875, cuotaMensual: 243750, precioTotal: 5850000, gananciaTotal: 1350000 },
-  ]
-*/
+   6 meses (180 días):
+     cuotaCapital = $44.278/día | alquiler = $25.000 | TOTAL = $69.278/día
+     cuotaMensual = $2.078.340 | ganancia = $4.500.000 ($750.000/mes)
+
+   12 meses (360 días):
+     cuotaCapital = $22.139/día | alquiler = $22.000 | TOTAL = $44.139/día
+     cuotaMensual = $1.324.170 | ganancia = $7.920.000 ($660.000/mes)
+
+   18 meses (540 días) ← RECOMENDADO:
+     cuotaCapital = $14.760/día | alquiler = $22.000 | TOTAL = $36.760/día
+     cuotaMensual = $1.102.800 | ganancia = $11.880.000 ($660.000/mes)
+──────────────────────────────────────────────────────────────── */
