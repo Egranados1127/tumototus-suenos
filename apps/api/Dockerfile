@@ -35,4 +35,4 @@ COPY --from=builder /app/src/generated ./src/generated
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start:prod"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npm run start:prod"]

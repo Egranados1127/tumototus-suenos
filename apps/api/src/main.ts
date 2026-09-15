@@ -34,11 +34,9 @@ async function bootstrap() {
   // Prefijo global de la API
   app.setGlobalPrefix('api/v1');
 
-  // CORS — solo orígenes permitidos
+  // CORS — acepta todos los orígenes si no se especifica ALLOWED_ORIGINS
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') ?? [
-      'http://localhost:3000',
-    ],
+    origin: process.env.ALLOWED_ORIGINS?.split(',') ?? true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
