@@ -1,27 +1,29 @@
-# Base image
-FROM node:20-alpine AS builder
+# ─── BUILD STAGE ───────────────────────────────────────────────
+FROM node:20-slim AS builder
 
-# Create app directory
+# Install openssl for Prisma
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install app dependencies
 RUN npm install
 
-# Copy app source
 COPY . .
 
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Build the app (Avoid Windows xcopy in Linux Alpine)
+# Build NestJS app
 RUN npx @nestjs/cli build && cp -r src/generated dist/src/generated || true
 
-# --- Production Image ---
-FROM node:20-alpine AS production
+# ─── PRODUCTION STAGE ──────────────────────────────────────────
+FROM node:20-slim AS production
+
+# Install openssl for Prisma runtime
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -33,5 +35,4 @@ COPY --from=builder /app/src/generated ./src/generated
 
 EXPOSE 3001
 
-# Start the server using the production build
 CMD ["npm", "run", "start:prod"]
