@@ -14,7 +14,7 @@ export default function RegistrarPagoPage() {
     e.preventDefault();
     try {
       // Nota: En producción, aquí se enviaría también la foto (FormData)
-      const res = await fetch(`http://localhost:3001/api/v1/contratos/${contratoId}/liquidaciones`, {
+      const res = await fetch(`${API_URL}/api/v1/contratos/${contratoId}/liquidaciones`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -15,7 +16,7 @@ export default function ConductorPagarPage() {
 
   useEffect(() => {
     // Para MVP, obtenemos el contrato
-    fetch('http://localhost:3001/api/v1/contratos/mi-contrato')
+    fetch('${API_URL}/api/v1/contratos/mi-contrato')
       .then(res => res.json())
       .then(data => {
         setContratoId(data.contratoId);
@@ -45,7 +46,7 @@ export default function ConductorPagarPage() {
     formData.append('nota', 'Pago reportado desde App Conductor');
 
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/contratos/${contratoId}/liquidaciones`, {
+      const res = await fetch(`${API_URL}/api/v1/contratos/${contratoId}/liquidaciones`, {
         method: 'POST',
         body: formData,
         // Authorization: Bearer TOKEN iría aquí

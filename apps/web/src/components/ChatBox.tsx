@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 
 import { useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -22,7 +23,7 @@ export default function ChatBox({ pedidoId, rol }: ChatBoxProps) {
 
   useEffect(() => {
     // Conectar al namespace default del API
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io('${API_URL}');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

@@ -18,7 +18,7 @@ export default function PedidoQRCliente() {
     e.preventDefault();
     setStatus('loading');
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/pedidos/qr/${comercioId}`, {
+      const res = await fetch(`${API_URL}/api/v1/pedidos/qr/${comercioId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

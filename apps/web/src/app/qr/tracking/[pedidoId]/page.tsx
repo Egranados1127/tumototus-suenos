@@ -8,7 +8,7 @@ export default function TrackingPedidoPage({ params }: { params: { pedidoId: str
   useEffect(() => {
     // Polling simple para ver si el conductor ya lo aceptó
     const interval = setInterval(async () => {
-      const res = await fetch(`http://localhost:3001/api/v1/pedidos/${params.pedidoId}`);
+      const res = await fetch(`${API_URL}/api/v1/pedidos/${params.pedidoId}`);
       if (res.ok) {
         const data = await res.json();
         setPedido(data.data);

@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -11,7 +12,7 @@ export default function PedidosRadarConductor() {
     try {
       // Nota: En producción esto llevaría el Token JWT en los headers.
       // Aquí estamos llamando a nuestro endpoint que está disponible (o asumiendo un mock de login)
-      const res = await fetch('http://localhost:3001/api/v1/pedidos/disponibles');
+      const res = await fetch('${API_URL}/api/v1/pedidos/disponibles');
       if (res.ok) {
         const data = await res.json();
         setPedidos(data);
@@ -32,7 +33,7 @@ export default function PedidosRadarConductor() {
 
   const aceptarPedido = async (pedidoId: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/pedidos/${pedidoId}/aceptar`, {
+      const res = await fetch(`${API_URL}/api/v1/pedidos/${pedidoId}/aceptar`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

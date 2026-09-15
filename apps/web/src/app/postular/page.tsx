@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 import { useState } from 'react';
 
 export default function PostulacionConductor() {
@@ -9,7 +10,7 @@ export default function PostulacionConductor() {
   const simular = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/v1/contratos/simular', {
+      const res = await fetch('${API_URL}/api/v1/contratos/simular', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ valorMoto })
@@ -38,7 +39,7 @@ export default function PostulacionConductor() {
         plazoDeseado: planSeleccionado.plazoMeses
       };
       
-      const res = await fetch('http://localhost:3001/api/v1/postulaciones', {
+      const res = await fetch('${API_URL}/api/v1/postulaciones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

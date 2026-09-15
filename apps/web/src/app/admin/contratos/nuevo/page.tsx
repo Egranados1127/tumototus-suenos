@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 import { useState } from 'react';
 
 export default function NuevoContratoPage() {
@@ -8,7 +9,7 @@ export default function NuevoContratoPage() {
 
   const simular = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/v1/contratos/simular', {
+      const res = await fetch('${API_URL}/api/v1/contratos/simular', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ valorMoto, porcentajeGanancia, plazosASimular: [12, 18, 24] })

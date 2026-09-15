@@ -1,4 +1,5 @@
 'use client';
+import { API_URL } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -6,7 +7,7 @@ export default function AdminDashboardPage() {
   const [resumen, setResumen] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/v1/finanzas/resumen')
+    fetch('${API_URL}/api/v1/finanzas/resumen')
       .then(res => res.json())
       .then(data => setResumen(data))
       .catch(console.error);

@@ -13,7 +13,7 @@ export default function DocumentosVehiculoPage() {
   const subirDocumento = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/vehiculos/${placa}/documentos`, {
+      const res = await fetch(`${API_URL}/api/v1/vehiculos/${placa}/documentos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }, // Mock para form-data sin archivo real
         body: JSON.stringify({ tipo, fechaExpedicion, fechaVencimiento })

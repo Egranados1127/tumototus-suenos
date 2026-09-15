@@ -13,7 +13,7 @@ export default function ViajeEnCursoPage({ params }: { params: { pedidoId: strin
   const [completando, setCompletando] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/v1/pedidos/${pedidoId}`)
+    fetch(`${API_URL}/api/v1/pedidos/${pedidoId}`)
       .then(res => res.json())
       .then(data => {
         setPedido(data);
@@ -25,7 +25,7 @@ export default function ViajeEnCursoPage({ params }: { params: { pedidoId: strin
   const completarPedido = async () => {
     setCompletando(true);
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/pedidos/${pedidoId}/completar`, {
+      const res = await fetch(`${API_URL}/api/v1/pedidos/${pedidoId}/completar`, {
         method: 'PATCH'
       });
       if (res.ok) {
