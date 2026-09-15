@@ -18,16 +18,18 @@ export class SolicitarServicioUseCase {
 
     // Para MVP: si no existe el comercio, lo creamos automáticamente como demo
     if (!comercio) {
-      const demoComerció = {
+      const demoComercio = {
         id: uuidv4(),
-        nombre: `Comercio Demo (${qrToken})`,
+        nombre: `Comercio Demo`,
+        direccion: 'Dirección Demo 123',
+        ciudad: 'Bogotá',
+        telefono: '3000000000',
+        email: null,
         qrToken,
         activo: true,
-        creadoEn: new Date(),
-        actualizadoEn: new Date(),
       };
-      await this.comercioRepo.guardar(demoComerció);
-      comercio = demoComerció;
+      await this.comercioRepo.guardar(demoComercio);
+      comercio = demoComercio;
     }
 
     if (!comercio.activo) {
@@ -40,9 +42,6 @@ export class SolicitarServicioUseCase {
       descripcion: dto.descripcion,
       direccionEntrega: dto.direccionEntrega,
       notas: dto.notas || null,
-      estado: 'SOLICITADO',
-      creadoEn: new Date(),
-      actualizadoEn: new Date(),
     };
 
     await this.pedidoRepo.guardar(pedido);
