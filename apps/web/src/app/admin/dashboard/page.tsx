@@ -7,7 +7,7 @@ export default function AdminDashboardPage() {
   const [resumen, setResumen] = useState<any>(null);
 
   useEffect(() => {
-    fetch('${API_URL}/api/v1/finanzas/resumen')
+    fetch(`${API_URL}/api/v1/finanzas/resumen`)
       .then(res => res.json())
       .then(data => setResumen(data))
       .catch(console.error);

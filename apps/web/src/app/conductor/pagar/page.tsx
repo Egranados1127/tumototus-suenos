@@ -16,7 +16,7 @@ export default function ConductorPagarPage() {
 
   useEffect(() => {
     // Para MVP, obtenemos el contrato
-    fetch('${API_URL}/api/v1/contratos/mi-contrato')
+    fetch(`${API_URL}/api/v1/contratos/mi-contrato`)
       .then(res => res.json())
       .then(data => {
         setContratoId(data.contratoId);

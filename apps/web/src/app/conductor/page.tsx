@@ -12,7 +12,7 @@ export default function ConductorDashboard() {
     // Simularemos la llamada con un auth token (hardcodeado o desde localStorage)
     const fetchContrato = async () => {
       try {
-        const res = await fetch('${API_URL}/api/v1/contratos/mi-contrato', {
+        const res = await fetch(`${API_URL}/api/v1/contratos/mi-contrato`, {
           headers: {
             'Content-Type': 'application/json',
             // 'Authorization': `Bearer ${token}` 

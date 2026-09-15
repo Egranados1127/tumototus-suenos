@@ -23,7 +23,7 @@ export default function ChatBox({ pedidoId, rol }: ChatBoxProps) {
 
   useEffect(() => {
     // Conectar al namespace default del API
-    const newSocket = io('${API_URL}');
+    const newSocket = io(`${API_URL}`);
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

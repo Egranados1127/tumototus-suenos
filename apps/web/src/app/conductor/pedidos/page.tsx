@@ -12,7 +12,7 @@ export default function PedidosRadarConductor() {
     try {
       // Nota: En producción esto llevaría el Token JWT en los headers.
       // Aquí estamos llamando a nuestro endpoint que está disponible (o asumiendo un mock de login)
-      const res = await fetch('${API_URL}/api/v1/pedidos/disponibles');
+      const res = await fetch(`${API_URL}/api/v1/pedidos/disponibles`);
       if (res.ok) {
         const data = await res.json();
         setPedidos(data);
