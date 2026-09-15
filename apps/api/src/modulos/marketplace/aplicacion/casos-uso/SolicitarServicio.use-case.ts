@@ -14,10 +14,24 @@ export class SolicitarServicioUseCase {
   ) {}
 
   async ejecutar(qrToken: string, dto: { descripcion: string; direccionEntrega: string; notas?: string }) {
-    const comercio = await this.comercioRepo.buscarPorQrToken(qrToken);
-    
-    if (!comercio || !comercio.activo) {
-      throw new NotFoundException('Comercio no encontrado o inactivo');
+    let comercio = await this.comercioRepo.buscarPorQrToken(qrToken);
+
+    // Para MVP: si no existe el comercio, lo creamos automáticamente como demo
+    if (!comercio) {
+      const demoComerció = {
+        id: uuidv4(),
+        nombre: `Comercio Demo (${qrToken})`,
+        qrToken,
+        activo: true,
+        creadoEn: new Date(),
+        actualizadoEn: new Date(),
+      };
+      await this.comercioRepo.guardar(demoComerció);
+      comercio = demoComerció;
+    }
+
+    if (!comercio.activo) {
+      throw new NotFoundException('Comercio inactivo');
     }
 
     const pedido = {
@@ -32,9 +46,7 @@ export class SolicitarServicioUseCase {
     };
 
     await this.pedidoRepo.guardar(pedido);
-    
-    // Aquí es donde entraría un WebSocket o SSE para notificar a los conductores
-    
+
     return pedido;
   }
 }
