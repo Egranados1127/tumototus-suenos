@@ -38,14 +38,13 @@ export default function PedidoQRCliente() {
 
       const data = await res.json();
 
-      if (res.ok) {
-        setPedidoCreado(data);
+      if (res.ok && data?.id) {
         router.push(`/qr/tracking/${data.id}`);
       } else if (res.status >= 500) {
         setErrorMsg('El servidor está iniciando. Espera 30 segundos e intenta de nuevo.');
         setStatus('error');
       } else {
-        setErrorMsg(data.message ?? 'Error al crear el pedido.');
+        setErrorMsg(data?.message ?? 'Error al crear el pedido. Intenta de nuevo.');
         setStatus('error');
       }
     } catch {

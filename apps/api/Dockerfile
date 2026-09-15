@@ -34,7 +34,8 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/start.sh ./start.sh
 
-RUN chmod +x start.sh
+# Fix Windows CRLF line endings and make executable
+RUN sed -i 's/\r//' start.sh && chmod +x start.sh
 
 EXPOSE 3001
 
