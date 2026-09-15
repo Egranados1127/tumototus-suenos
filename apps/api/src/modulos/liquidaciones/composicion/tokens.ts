@@ -1,0 +1,1 @@
+export const LIQUIDACION_REPO = Symbol('LIQUIDACION_REPO');

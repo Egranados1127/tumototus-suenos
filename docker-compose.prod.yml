@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin123}
+      POSTGRES_DB: ${DB_NAME:-tumototus}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tumototus-network
+
+  api:
+    build: 
+      context: ./apps/api
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-admin}:${DB_PASSWORD:-admin123}@postgres:5432/${DB_NAME:-tumototus}?schema=public
+      - JWT_SECRET=${JWT_SECRET:-super-secret-key}
+      - NODE_ENV=production
+    depends_on:
+      - postgres
+    networks:
+      - tumototus-network
+    # Ejecuta las migraciones de prisma automáticamente antes de arrancar
+    command: /bin/sh -c "npx prisma migrate deploy && npm run start:prod"
+
+volumes:
+  postgres_data:
+
+networks:
+  tumototus-network:
+    driver: bridge

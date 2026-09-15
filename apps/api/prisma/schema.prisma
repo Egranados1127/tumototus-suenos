@@ -1,0 +1,334 @@
+// ══════════════════════════════════════════════════════════════════
+// TuMotoTus Sueños — Schema Prisma Completo
+// Schemas PostgreSQL: plataforma | flota | marketplace | finanzas
+// ══════════════════════════════════════════════════════════════════
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["plataforma", "flota", "marketplace", "finanzas"]
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCHEMA: plataforma — Usuarios y Autenticación
+// ══════════════════════════════════════════════════════════════════
+
+model Usuario {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  passwordHash String  @map("password_hash")
+  rol         RolUsuario
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  // Relaciones
+  perfil      PerfilConductor?
+  sesiones    Sesion[]
+  liquidacionesRegistradas Liquidacion[] @relation("RegistradaPor")
+
+  @@map("usuarios")
+  @@schema("plataforma")
+}
+
+enum RolUsuario {
+  ADMIN
+  CONDUCTOR
+  COMERCIO
+
+  @@schema("plataforma")
+}
+
+model Sesion {
+  id        String   @id @default(uuid())
+  usuarioId String   @map("usuario_id")
+  token     String   @unique
+  expiraEn  DateTime @map("expira_en")
+  revocada  Boolean  @default(false)
+  creadoEn  DateTime @default(now()) @map("creado_en")
+
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+
+  @@map("sesiones")
+  @@schema("plataforma")
+}
+
+model PerfilConductor {
+  id              String   @id @default(uuid())
+  usuarioId       String   @unique @map("usuario_id")
+  nombres         String
+  apellidos       String
+  cedula          String   @unique
+  telefono        String
+  ciudad          String
+  fotoUrl         String?  @map("foto_url")
+  numeroLicencia  String?  @map("numero_licencia")
+  vencimientoLicencia DateTime? @map("vencimiento_licencia")
+  creadoEn        DateTime @default(now()) @map("creado_en")
+  actualizadoEn   DateTime @updatedAt @map("actualizado_en")
+
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
+  contratos       Contrato[]
+
+  @@map("perfiles_conductores")
+  @@schema("plataforma")
+}
+
+model PostulacionConductor {
+  id              String   @id @default(uuid())
+  nombres         String
+  apellidos       String
+  cedula          String   @unique
+  telefono        String
+  ciudad          String
+  direccion       String
+  motoDeseada     String   @map("moto_deseada")
+  plazoDeseado    Int      @map("plazo_deseado")
+  
+  // Enlaces a documentos KYC en MinIO
+  fotoCedulaUrl   String?  @map("foto_cedula_url")
+  fotoLicenciaUrl String?  @map("foto_licencia_url")
+  fotoReciboUrl   String?  @map("foto_recibo_url")
+  fotoSelfieUrl   String?  @map("foto_selfie_url")
+  
+  estado          EstadoPostulacion @default(PENDIENTE)
+  creadoEn        DateTime @default(now()) @map("creado_en")
+  actualizadoEn   DateTime @updatedAt @map("actualizado_en")
+
+  @@map("postulaciones_conductores")
+  @@schema("plataforma")
+}
+
+enum EstadoPostulacion {
+  PENDIENTE
+  REVISION
+  APROBADA
+  RECHAZADA
+
+  @@schema("plataforma")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCHEMA: flota — Vehículos, Contratos, Liquidaciones, Documentos
+// ══════════════════════════════════════════════════════════════════
+
+model Vehiculo {
+  placa           String   @id
+  marca           String
+  modelo          String
+  anio            Int      @map("anio")
+  cilindraje      Int      // cc — <125 exento rodamiento
+  color           String
+  vin             String?  @unique
+  fotoUrl         String?  @map("foto_url")
+  odometroActual  Int      @default(0) @map("odometro_actual")
+  estado          EstadoVehiculo @default(DISPONIBLE)
+  creadoEn        DateTime @default(now()) @map("creado_en")
+  actualizadoEn   DateTime @updatedAt @map("actualizado_en")
+
+  contratos       Contrato[]
+  documentos      DocumentoVehicular[]
+
+  @@map("vehiculos")
+  @@schema("flota")
+}
+
+enum EstadoVehiculo {
+  DISPONIBLE
+  ENTREGADA
+  EN_TALLER
+  BACKUP
+  BAJA
+
+  @@schema("flota")
+}
+
+model Contrato {
+  id                  String   @id @default(uuid())
+  conductorId         String   @map("conductor_id")
+  vehiculoPlaca       String   @map("vehiculo_placa")
+
+  // Estructura financiera
+  valorMoto           Decimal  @map("valor_moto") @db.Decimal(12, 2)
+  porcentajeGanancia  Decimal  @map("porcentaje_ganancia") @db.Decimal(5, 2)
+  precioTotal         Decimal  @map("precio_total") @db.Decimal(12, 2)
+  plazoMeses          Int      @map("plazo_meses")
+  cuotaDiaria         Decimal  @map("cuota_diaria") @db.Decimal(12, 2)
+
+  // Progreso de pago
+  totalPagado         Decimal  @default(0) @map("total_pagado") @db.Decimal(12, 2)
+  saldoPendiente      Decimal  @map("saldo_pendiente") @db.Decimal(12, 2) // precioTotal - totalPagado
+  porcentajeAvance    Decimal  @default(0) @map("porcentaje_avance") @db.Decimal(5, 2)
+
+  // Estado y fechas
+  estado              EstadoContrato @default(ACTIVO)
+  fechaInicio         DateTime @map("fecha_inicio") @db.Date
+  fechaEstimadaLibre  DateTime @map("fecha_estimada_libre") @db.Date
+  fechaLiberacion     DateTime? @map("fecha_liberacion") @db.Date
+  diasEnMora          Int      @default(0) @map("dias_en_mora")
+  notasCierre         String?  @map("notas_cierre")
+
+  creadoEn            DateTime @default(now()) @map("creado_en")
+  actualizadoEn       DateTime @updatedAt @map("actualizado_en")
+
+  conductor           PerfilConductor @relation(fields: [conductorId], references: [id])
+  vehiculo            Vehiculo @relation(fields: [vehiculoPlaca], references: [placa])
+  liquidaciones       Liquidacion[]
+
+  @@index([conductorId])
+  @@index([vehiculoPlaca])
+  @@index([estado])
+  @@map("contratos")
+  @@schema("flota")
+}
+
+enum EstadoContrato {
+  ACTIVO
+  EN_MORA
+  SUSPENDIDO
+  LIBERADO   // pagado al 100% — moto transferida al conductor
+
+  @@schema("flota")
+}
+
+model Liquidacion {
+  id              String   @id @default(uuid())
+  contratoId      String   @map("contrato_id")
+  registradoPorId String   @map("registrado_por_id")
+
+  valor           Decimal  @db.Decimal(12, 2)
+  valorMora       Decimal  @default(0) @map("valor_mora") @db.Decimal(12, 2)
+  diasMoraAplicados Int    @default(0) @map("dias_mora_aplicados")
+  fechaPago       DateTime @map("fecha_pago") @db.Date
+  metodoPago      MetodoPago @map("metodo_pago")
+  comprobante     String?  // URL del comprobante en MinIO
+  nota            String?
+  creadoEn        DateTime @default(now()) @map("creado_en")
+
+  contrato        Contrato @relation(fields: [contratoId], references: [id])
+  registradoPor   Usuario  @relation("RegistradaPor", fields: [registradoPorId], references: [id])
+
+  @@index([contratoId])
+  @@index([fechaPago])
+  @@map("liquidaciones")
+  @@schema("flota")
+}
+
+enum MetodoPago {
+  EFECTIVO
+  NEQUI
+  TRANSFERENCIA
+  WOMPI
+
+  @@schema("flota")
+}
+
+model DocumentoVehicular {
+  id                  String   @id @default(uuid())
+  vehiculoPlaca       String   @map("vehiculo_placa")
+  tipo                TipoDocumento
+  fechaExpedicion     DateTime? @map("fecha_expedicion") @db.Date
+  fechaVencimiento    DateTime @map("fecha_vencimiento") @db.Date
+  archivoUrl          String?  @map("archivo_url")  // URL en MinIO
+  estado              EstadoDocumento @default(VIGENTE)
+  creadoEn            DateTime @default(now()) @map("creado_en")
+  actualizadoEn       DateTime @updatedAt @map("actualizado_en")
+
+  vehiculo            Vehiculo @relation(fields: [vehiculoPlaca], references: [placa])
+
+  @@index([vehiculoPlaca])
+  @@index([fechaVencimiento])
+  @@map("documentos_vehiculares")
+  @@schema("flota")
+}
+
+enum TipoDocumento {
+  SOAT
+  TECNICOMECANICA
+  SEGURO_TODO_RIESGO
+  TARJETA_PROPIEDAD
+
+  @@schema("flota")
+}
+
+enum EstadoDocumento {
+  VIGENTE
+  POR_VENCER    // ≤30 días para vencer
+  VENCIDO
+
+  @@schema("flota")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCHEMA: marketplace — Comercios y Pedidos (Fase 2)
+// ══════════════════════════════════════════════════════════════════
+
+model Comercio {
+  id          String   @id @default(uuid())
+  nombre      String
+  direccion   String
+  ciudad      String
+  telefono    String
+  email       String?
+  qrToken     String   @unique @map("qr_token") @default(uuid())
+  activo      Boolean  @default(true)
+  creadoEn    DateTime @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  pedidos     Pedido[]
+
+  @@map("comercios")
+  @@schema("marketplace")
+}
+
+model Pedido {
+  id            String   @id @default(uuid())
+  comercioId    String   @map("comercio_id")
+  conductorId   String?  @map("conductor_id")
+  descripcion   String
+  direccionEntrega String @map("direccion_entrega")
+  estado        EstadoPedido @default(SOLICITADO)
+  notas         String?
+  creadoEn      DateTime @default(now()) @map("creado_en")
+  actualizadoEn DateTime @updatedAt @map("actualizado_en")
+
+  comercio      Comercio @relation(fields: [comercioId], references: [id])
+
+  @@index([comercioId])
+  @@index([estado])
+  @@map("pedidos")
+  @@schema("marketplace")
+}
+
+enum EstadoPedido {
+  SOLICITADO
+  ASIGNADO
+  EN_CAMINO
+  ENTREGADO
+  CANCELADO
+
+  @@schema("marketplace")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCHEMA: finanzas — Resúmenes y Reportes
+// ══════════════════════════════════════════════════════════════════
+
+model ResumenDiario {
+  id                  String   @id @default(uuid())
+  fecha               DateTime @unique @db.Date
+  totalLiquidaciones  Int      @default(0) @map("total_liquidaciones")
+  ingresosBrutos      Decimal  @default(0) @map("ingresos_brutos") @db.Decimal(12, 2)
+  ingresosNetos       Decimal  @default(0) @map("ingresos_netos") @db.Decimal(12, 2)
+  ingresosGanancia    Decimal  @default(0) @map("ingresos_ganancia") @db.Decimal(12, 2)
+  creadoEn            DateTime @default(now()) @map("creado_en")
+
+  @@map("resumenes_diarios")
+  @@schema("finanzas")
+}

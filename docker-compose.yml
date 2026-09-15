@@ -1,0 +1,112 @@
+services:
+  # ─── BASE DE DATOS ────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: tumoto_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tumoto}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tumoto_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-tumototus}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tumoto} -d ${POSTGRES_DB:-tumototus}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── CACHE / COLA ─────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: tumoto_redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_secret}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_secret}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── OBJECT STORAGE (Documentos: SOAT, TM, fotos) ─────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: tumoto_minio
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9000:9000"   # API
+      - "127.0.0.1:9001:9001"   # Console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-tumoto_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio_secret_123}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── MIGRACIONES (servicio efímero) ───────────────────────────────
+  migraciones:
+    build:
+      context: ./apps/api
+      target: migraciones
+    container_name: tumoto_migraciones
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-tumoto}:${POSTGRES_PASSWORD:-tumoto_secret}@postgres:5432/${POSTGRES_DB:-tumototus}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  # ─── API BACKEND ──────────────────────────────────────────────────
+  api:
+    build:
+      context: ./apps/api
+      target: produccion
+    container_name: tumoto_api
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3001"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migraciones:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/salud"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── FRONTEND WEB ─────────────────────────────────────────────────
+  web:
+    build:
+      context: ./apps/web
+    container_name: tumoto_web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
