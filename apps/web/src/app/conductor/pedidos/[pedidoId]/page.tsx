@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ChatBox from '@/components/ChatBox';
+import { API_URL } from '@/lib/api';
 
 export default function ViajeEnCursoPage({ params }: { params: { pedidoId: string } }) {
   const router = useRouter();

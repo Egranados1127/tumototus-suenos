@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import { API_URL } from '@/lib/api';
 
 export default function DocumentosVehiculoPage() {
   const params = useParams();

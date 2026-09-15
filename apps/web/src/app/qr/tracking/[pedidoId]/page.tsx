@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ChatBox from '@/components/ChatBox';
+import { API_URL } from '@/lib/api';
 
 export default function TrackingPedidoPage({ params }: { params: { pedidoId: string } }) {
   const [pedido, setPedido] = useState<any>(null);
