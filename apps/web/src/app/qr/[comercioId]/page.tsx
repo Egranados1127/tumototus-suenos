@@ -1,9 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function PedidoQRCliente() {
   const params = useParams();
+  const router = useRouter();
   const comercioId = params.comercioId as string; // UUID (qrToken)
   
   const [formData, setFormData] = useState({
