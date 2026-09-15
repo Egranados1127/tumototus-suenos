@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { API_URL } from '@/lib/api';
 
 const ESTADOS: Record<string, { label: string; icon: string; color: string; paso: number }> = {
@@ -10,8 +11,9 @@ const ESTADOS: Record<string, { label: string; icon: string; color: string; paso
   CANCELADO:   { label: 'Pedido cancelado',      icon: '❌', color: 'text-red-600 bg-red-50 border-red-200',        paso: 0 },
 };
 
-export default function TrackingPedidoPage({ params }: { params: { pedidoId: string } }) {
-  const { pedidoId } = params;
+export default function TrackingPedidoPage() {
+  const params = useParams();
+  const pedidoId = params.pedidoId as string;
   const [pedido, setPedido] = useState<any>(null);
   const [error, setError] = useState('');
 
