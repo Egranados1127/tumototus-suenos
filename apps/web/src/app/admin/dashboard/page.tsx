@@ -3,18 +3,91 @@ import { API_URL } from '@/lib/api';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const ADMIN_PIN = '1234';
+
 export default function AdminDashboardPage() {
+  const [pin, setPin] = useState('');
+  const [autenticado, setAutenticado] = useState(false);
+  const [pinError, setPinError] = useState(false);
   const [resumen, setResumen] = useState<any>(null);
+  const [cargando, setCargando] = useState(false);
+  const [apiError, setApiError] = useState('');
+
+  const verificarPin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin === ADMIN_PIN) {
+      setAutenticado(true);
+    } else {
+      setPinError(true);
+      setTimeout(() => setPinError(false), 2000);
+    }
+  };
 
   useEffect(() => {
+    if (!autenticado) return;
+    setCargando(true);
     fetch(`${API_URL}/api/v1/finanzas/resumen`)
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(data => setResumen(data))
-      .catch(console.error);
-  }, []);
+      .catch(err => setApiError(err === 503 ? 'Servidor iniciando, recarga en 30s' : 'Backend no disponible'))
+      .finally(() => setCargando(false));
+  }, [autenticado]);
 
-  if (!resumen) return <div className="p-8">Cargando dashboard...</div>;
-  if (resumen.statusCode) return <div className="p-8 text-red-500">Error: No autorizado o falló el backend.</div>;
+  // Pantalla de PIN
+  if (!autenticado) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center">
+          <div className="text-5xl mb-4">🔐</div>
+          <h1 className="text-2xl font-black text-gray-800 mb-1">Acceso Restringido</h1>
+          <p className="text-gray-500 text-sm mb-6">Panel administrativo de TuMotoTus Sueños</p>
+          <form onSubmit={verificarPin} className="space-y-4">
+            <input
+              type="password"
+              placeholder="PIN de acceso"
+              maxLength={4}
+              className={`w-full text-center text-2xl font-bold tracking-[0.5em] px-4 py-3 rounded-xl border-2 outline-none transition-all ${
+                pinError ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-blue-500'
+              }`}
+              value={pin}
+              onChange={e => setPin(e.target.value)}
+            />
+            {pinError && <p className="text-red-500 text-sm font-bold">PIN incorrecto</p>}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition"
+            >
+              Entrar al Panel
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  if (cargando) return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin text-5xl mb-4">⚙️</div>
+        <p className="text-gray-600 font-bold">Cargando métricas...</p>
+        <p className="text-gray-400 text-sm">El servidor puede tardar 30 segundos si estaba inactivo</p>
+      </div>
+    </div>
+  );
+
+  if (apiError) return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl p-8 shadow text-center max-w-sm">
+        <div className="text-4xl mb-3">⚠️</div>
+        <p className="font-bold text-gray-700">{apiError}</p>
+        <button onClick={() => window.location.reload()} className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
+
+  if (!resumen) return null;
 
   return (
     <div className="p-8 max-w-5xl mx-auto">

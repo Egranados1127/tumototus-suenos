@@ -22,8 +22,8 @@ RUN npx @nestjs/cli build && cp -r src/generated dist/src/generated || true
 # ─── PRODUCTION STAGE ──────────────────────────────────────────
 FROM node:20-slim AS production
 
-# Install openssl for Prisma runtime
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install openssl for Prisma + postgresql-client for schema creation
+RUN apt-get update && apt-get install -y openssl postgresql-client && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -32,7 +32,10 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src/generated ./src/generated
+COPY --from=builder /app/start.sh ./start.sh
+
+RUN chmod +x start.sh
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npm run start:prod"]
+CMD ["./start.sh"]

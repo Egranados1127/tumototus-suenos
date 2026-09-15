@@ -2,84 +2,87 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 font-sans flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 text-white p-2 rounded-xl">
-              <span className="text-xl">🛵</span>
-            </div>
-            <h1 className="text-lg font-black tracking-tight text-gray-900">
-              TuMoto<span className="text-blue-600">TusSueños</span>
-            </h1>
+      <header className="px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="bg-white/20 backdrop-blur text-white p-2 rounded-xl">
+            <span className="text-2xl">🛵</span>
           </div>
-          <Link
-            href="/admin/dashboard"
-            className="text-xs font-bold bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg transition-colors"
-          >
-            ⚙️ Admin
-          </Link>
+          <h1 className="text-xl font-black text-white">
+            TuMoto<span className="text-yellow-300">TusSueños</span>
+          </h1>
         </div>
+        <Link
+          href="/conductor/pedidos"
+          className="text-xs font-bold bg-white/20 text-white hover:bg-white/30 px-3 py-2 rounded-lg transition-colors backdrop-blur"
+        >
+          Soy Conductor →
+        </Link>
       </header>
 
-      {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
-            Estás a un clic de <br />
-            <span className="text-blue-600">estrenar tu moto</span>
+      {/* Hero */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 text-center">
+        <div className="max-w-md mx-auto space-y-6">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur text-white text-xs font-bold px-4 py-2 rounded-full border border-white/20">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            Plataforma activa · Colombia
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
+            Estrena tu moto.<br />
+            <span className="text-yellow-300">Trabaja para ti.</span>
           </h2>
 
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            El modelo Rent-to-Own más justo de Colombia. Trabaja para ti mismo y conviértete en dueño de tu moto.
+          <p className="text-lg text-blue-100">
+            El modelo Rent-to-Own más transparente de Colombia. Sin cuotas escondidas, sin letra pequeña.
           </p>
 
-          {/* Botones principales */}
-          <div className="flex flex-col gap-3 pt-4 w-full max-w-sm mx-auto">
-            <Link
-              href="/postular"
-              className="bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-blue-700 shadow-xl shadow-blue-200 transition-transform hover:-translate-y-1 text-center"
-            >
-              🏍️ Simular mi Crédito
-            </Link>
-
-            <Link
-              href="/conductor/pedidos"
-              className="bg-white text-gray-900 font-bold text-lg px-8 py-4 rounded-full border-2 border-gray-200 hover:border-gray-900 transition-colors text-center"
-            >
-              🚀 Soy Conductor
-            </Link>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-3 py-4">
+            {[
+              { v: '3-12', u: 'meses', l: 'Plazos flexibles' },
+              { v: '0%', u: '', l: 'Cuota inicial' },
+              { v: '100%', u: '', l: 'Tuya al final' },
+            ].map((s) => (
+              <div key={s.l} className="bg-white/10 backdrop-blur rounded-2xl p-3 border border-white/20">
+                <p className="text-2xl font-black text-yellow-300">{s.v}<span className="text-sm">{s.u}</span></p>
+                <p className="text-xs text-blue-200 mt-1">{s.l}</p>
+              </div>
+            ))}
           </div>
-        </div>
 
-        {/* Zona de pruebas */}
-        <div className="mt-12 pt-6 border-t border-gray-200 w-full max-w-sm">
-          <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mb-3">
-            Zona de Pruebas
-          </p>
-          <div className="flex flex-col gap-2">
+          {/* CTA principal */}
+          <Link
+            href="/postular"
+            className="block w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black text-lg px-8 py-4 rounded-2xl transition-all shadow-2xl shadow-yellow-500/30 hover:scale-105"
+          >
+            🏍️ Simular mi Plan Ahora
+          </Link>
+
+          {/* QR Demo */}
+          <div className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20">
+            <p className="text-xs text-blue-200 font-bold uppercase tracking-widest mb-3">
+              📦 ¿Necesitas un domicilio?
+            </p>
             <Link
               href="/qr/demo-comercio-123"
-              className="block w-full bg-gray-900 text-white rounded-xl p-3 font-bold text-sm hover:bg-gray-800 text-center"
+              className="block w-full bg-white text-blue-700 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors text-sm"
             >
-              📸 Simular escanear QR (Cliente)
-            </Link>
-            <Link
-              href="/admin/dashboard"
-              className="block w-full bg-indigo-600 text-white rounded-xl p-3 font-bold text-sm hover:bg-indigo-700 text-center"
-            >
-              📊 Panel Administrativo
-            </Link>
-            <Link
-              href="/conductor/pagar"
-              className="block w-full bg-green-600 text-white rounded-xl p-3 font-bold text-sm hover:bg-green-700 text-center"
-            >
-              💳 Reportar Pago (Conductor)
+              Pedir domiciliario ahora
             </Link>
           </div>
         </div>
       </main>
+
+      {/* Footer discreto con acceso admin */}
+      <footer className="text-center py-3 text-xs text-blue-300">
+        <span>© 2026 TuMotoTus Sueños · </span>
+        <Link href="/admin/dashboard" className="hover:text-white underline underline-offset-2">
+          Equipo
+        </Link>
+      </footer>
     </div>
   );
 }
