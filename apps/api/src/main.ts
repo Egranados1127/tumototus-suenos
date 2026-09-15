@@ -14,9 +14,7 @@ async function bootstrap() {
   // ─── VALIDACIONES PRE-ARRANQUE ─────────────────────────────────
   const envRequeridas = [
     'DATABASE_URL',
-    'JWT_SECRETO',
-    'REDIS_HOST',
-    'REDIS_PASSWORD',
+    'JWT_SECRET',
   ];
 
   const faltantes = envRequeridas.filter((v) => !process.env[v]);
