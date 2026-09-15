@@ -34,10 +34,15 @@ async function bootstrap() {
   // Prefijo global de la API
   app.setGlobalPrefix('api/v1');
 
-  // CORS — acepta todos los orígenes si no se especifica ALLOWED_ORIGINS
+  // CORS — permite Vercel, localhost y cualquier subdominio configurado
+  const origenes = process.env.ALLOWED_ORIGINS?.split(',') ?? [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://tumototus-suenos-web.vercel.app',
+  ];
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') ?? true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    origin: origenes,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
